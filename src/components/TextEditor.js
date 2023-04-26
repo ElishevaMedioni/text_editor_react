@@ -8,9 +8,17 @@ import '/Users/Elish_1/test3/src/App.js';
 
 class TextEditor extends Component {
 
-  state = {
-    editorState: EditorState.createEmpty(),
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      editorState: EditorState.createEmpty(),
+    };
+    this.editor = React.createRef();
+  }
+
+  // state = {
+  //   editorState: EditorState.createEmpty(),
+  // };
 
   onEditorStateChange = (editorState) => {
     this.setState({
@@ -45,6 +53,10 @@ class TextEditor extends Component {
       editorState: newEditorState,
     });
   };
+
+  handleClear = () => {
+    this.setState({ editorState: EditorState.createEmpty() });
+  };
   
 
   render() {
@@ -61,7 +73,7 @@ class TextEditor extends Component {
           onEditorStateChange={this.onEditorStateChange}
           ref={(element) => { this.editor = element; }}
         />
-        <EditorButtons handleClick={this.handleButtonClick} />
+        <EditorButtons handleClick={this.handleButtonClick} handleClear={this.handleClear}/>
         
       </div>
     );
@@ -81,6 +93,7 @@ class EditorButtons extends Component {
     };
     this.handleSwitchKeyboard = this.handleSwitchKeyboard.bind(this);
     this.handleSwitchCase = this.handleSwitchCase.bind(this);
+    this.handleClear = this.handleClear.bind(this);
     
   }
 
@@ -91,8 +104,6 @@ class EditorButtons extends Component {
       this.props.handleClick(value);
     }
   };
-  
-  
   
 
   handleClick = (letter) => {
@@ -128,7 +139,14 @@ class EditorButtons extends Component {
     } 
   }
 
+  handleClear() {
+    this.props.handleClear();
+  }
+
+
+
   render() {
+
     const list_english_row1 =['1','2','3','4','5','6','7','8','9','0'];
     const list_english_row2 =['q','w','e','r','t','y','u','i','o','p'];
     const list_english_row3 =['a','s','d','f','g','h','j','k','l'];
@@ -141,6 +159,12 @@ class EditorButtons extends Component {
     const list_english_uppercase_row2 =['Q','W','E','R','T','Y','U','I','O','P'];
     const list_english_uppercase_row3 =['A','S','D','F','G','H','J','K','L'];
     const list_english_uppercase_row4 =['Z','X','C','V','B','N','M'];
+
+    const clearButton = (
+      <button onClick={this.props.handleClear}>
+        Clear All
+      </button>
+    );
 
   
     // const row1 = list_english_row1.map((letter) => (
@@ -249,7 +273,7 @@ class EditorButtons extends Component {
     
     return (
       <div>
-
+        
         <div className="keyboard-row">{row1}</div>
         <div className="keyboard-row">{row2}</div>
         <div className="keyboard-row">{row3}</div>
@@ -257,6 +281,9 @@ class EditorButtons extends Component {
         <div className="keyboard-row">{row5}</div>
         <button onClick={this.handleSwitchKeyboard}>{switchButtonLabel}</button>
         <button onClick={this.handleSwitchCase}>{switchCaseLabel}</button>
+        <div className="editor-buttons">
+          {clearButton}
+        </div>
 
       </div>
     );
