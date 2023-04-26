@@ -1,31 +1,3 @@
-// import React, { Component } from 'react';
-
-// class KeyboardInput extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       userInput: ''
-//     };
-//     this.handleInput = this.handleInput.bind(this);
-//   }
-
-//   handleInput(event) {
-//     this.setState({userInput: event.target.value});
-//   }
-
-//   render() {
-//     return (
-//       <div>
-//          <input type="text" onChange={this.handleInput} value={this.state.userInput} />
-//       <button onClick={() => this.setState({userInput: this.state.userInput + 'a'})}>A</button>
-
-//         <p>{this.state.userInput}</p>
-//       </div>
-//     );
-//   }
-// }
-
-// export default KeyboardInput;
 
 import React, { Component } from "react";
 import { Editor } from "react-draft-wysiwyg";
@@ -103,9 +75,12 @@ class EditorButtons extends Component {
 
     this.state = {
       isEngKeyboard: true,
+      isLowerCase: true,
+      isUpperCase: false,
       isHebrewKeyboard: false,
     };
     this.handleSwitchKeyboard = this.handleSwitchKeyboard.bind(this);
+    this.handleSwitchCase = this.handleSwitchCase.bind(this);
     
   }
 
@@ -145,6 +120,14 @@ class EditorButtons extends Component {
     }
   }
 
+  handleSwitchCase() {
+    if (this.state.isLowerCase) {
+      this.setState({isLowerCase: false, isUpperCase: true});
+    } else {
+      this.setState({isLowerCase: true, isUpperCase: false});
+    } 
+  }
+
   render() {
     const list_english_row1 =['1','2','3','4','5','6','7','8','9','0'];
     const list_english_row2 =['q','w','e','r','t','y','u','i','o','p'];
@@ -154,20 +137,55 @@ class EditorButtons extends Component {
     const list_hebrew_row2 =['ק','ר','א','ט','ו','ן','ם','פ'];
     const list_hebrew_row3 =['ש','ד','ג','כ','ע','י','ח','ל'];
     const list_hebrew_row4 =['ז','ס','ב','ה','נ','מ','צ'];
+    const list_english_uppercase_row1 =['!','@','#','$','%','^','&','*','(',')'];
+    const list_english_uppercase_row2 =['Q','W','E','R','T','Y','U','I','O','P'];
+    const list_english_uppercase_row3 =['A','S','D','F','G','H','J','K','L'];
+    const list_english_uppercase_row4 =['Z','X','C','V','B','N','M'];
 
   
-    const row1 = list_english_row1.map((letter) => (
-      <button key={letter} onClick={() => this.handleClick(letter)}>
-        {letter}
-      </button>
-    ));
+    // const row1 = list_english_row1.map((letter) => (
+    //   <button key={letter} onClick={() => this.handleClick(letter)}>
+    //     {letter}
+    //   </button>
+    // ));
 
-    const row2 = this.state.isEngKeyboard ? (
-      list_english_row2.map((letter) => (
+    // check if the keyboard is english or hebrew and if is upper or lower case
+    const row1 = this.state.isEngKeyboard ? (
+      this.state.isLowerCase ? (
+        list_english_row1.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      ) : (
+        list_english_uppercase_row1.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      )
+    ) : (
+      list_english_row1.map((letter) => (
         <button key={letter} onClick={() => this.handleClick(letter)}>
           {letter}
         </button>
       ))
+    );
+
+    const row2 = this.state.isEngKeyboard ? (
+      this.state.isLowerCase ? (
+        list_english_row2.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      ) : (
+        list_english_uppercase_row2.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      )
     ) : (
       list_hebrew_row2.map((letter) => (
         <button key={letter} onClick={() => this.handleClick(letter)}>
@@ -175,12 +193,21 @@ class EditorButtons extends Component {
         </button>
       ))
     );
+
     const row3 = this.state.isEngKeyboard ? (
-      list_english_row3.map((letter) => (
-        <button key={letter} onClick={() => this.handleClick(letter)}>
-          {letter}
-        </button>
-      ))
+      this.state.isLowerCase ? (
+        list_english_row3.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      ) : (
+        list_english_uppercase_row3.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      )
     ) : (
       list_hebrew_row3.map((letter) => (
         <button key={letter} onClick={() => this.handleClick(letter)}>
@@ -188,12 +215,21 @@ class EditorButtons extends Component {
         </button>
       ))
     );
+
     const row4 = this.state.isEngKeyboard ? (
-      list_english_row4.map((letter) => (
-        <button key={letter} onClick={() => this.handleClick(letter)}>
-          {letter}
-        </button>
-      ))
+      this.state.isLowerCase ? (
+        list_english_row4.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      ) : (
+        list_english_uppercase_row4.map((letter) => (
+          <button key={letter} onClick={() => this.handleClick(letter)}>
+            {letter}
+          </button>
+        ))
+      )
     ) : (
       list_hebrew_row4.map((letter) => (
         <button key={letter} onClick={() => this.handleClick(letter)}>
@@ -209,6 +245,7 @@ class EditorButtons extends Component {
     ));
 
     const switchButtonLabel = this.state.isEngKeyboard ? 'Switch to Hebrew' : 'Switch to English';
+    const switchCaseLabel = this.state.isLowerCase ? 'Switch to Uppercase' : 'Switch to Lowercase';
     
     return (
       <div>
@@ -219,6 +256,7 @@ class EditorButtons extends Component {
         <div className="keyboard-row">{row4}</div>
         <div className="keyboard-row">{row5}</div>
         <button onClick={this.handleSwitchKeyboard}>{switchButtonLabel}</button>
+        <button onClick={this.handleSwitchCase}>{switchCaseLabel}</button>
 
       </div>
     );
