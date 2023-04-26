@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React from "react"
 import TextEditor from './components/TextEditor';
+//import KeyboardInput from './components/TextEditor';
 
 function App() {
   return (
@@ -11,9 +12,8 @@ function App() {
         <h1>React Text Editor</h1>
       </header>
       <div className='editor'>
-        <TextEditor />
+      <TextEditor />
       </div>
-      
     </div>
   );
 }
