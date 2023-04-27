@@ -1,0 +1,67 @@
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #f2f2f2;
+    color: #333;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #ddd;
+  }
+  
+  button:active {
+    background-color: #ccc;
+  }
+  
+  button.space {
+    width: 100%;
+  }
+  
+  button.backspace {
+    color: red;
+  }
+  
+  button.enter {
+    width: 100%;
+  }
+  
+  button.switch {
+    background-color: #ff9900;
+    color: #fff;
+    margin-top: 20px;
+  }
+  
+  button.clear {
+    background-color: #cc0000;
+    color: #fff;
+    margin-top: 20px;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: flex-start;
+    
+  }  
+  
+  /* #key-he {
+    order: 1;
+  }
+  
+  #key-cap {
+    order: 2;
+  }
+  
+  #key-clear {
+    order: 3;
+  } */
+  
