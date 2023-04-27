@@ -4,33 +4,37 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw,ContentState, Modifier } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import './styles.css';
+import PropTypes from 'prop-types';
 
 class TextEditor extends Component {
 
+  /*
+  initialise le component en définissant editorState à un objet EditorState vide 
+  */
   constructor(props) {
     super(props);
     this.state = {
       editorState: EditorState.createEmpty(),
     };
-    this.editor = React.createRef();
   }
 
+  /*
+  Cette méthode est appelée quand le state de l'éditeur change. 
+  Elle met à jour le state du component avec un nouveau state.
+  */
   onEditorStateChange = (editorState) => {
     this.setState({
       editorState,
     });
   };
 
-  getKeyboardProps = () => {
-    return {
-      editorState: this.state.editorState,
-      inputNode: () => this.editor,
-      onChange: (editorState) => {
-        this.setState({ editorState });
-      },
-    };
-  };
-
+/*
+Cette méthode est appelée qd on click sur un bouton dans EditorButtons (enfant).
+Elle insère la lettre du bouton dans le contenu de l'éditeur à la position actuelle du curseur 
+en modifiant l'objet ContentState à l'aide de la méthode Modifier.insertText(),
+puis crée un nouvel objet EditorState avec le contenu mis à jour à l'aide de EditorState.push(),
+et définit le state du component avec le nouveau state de l'éditeur.
+*/
   handleButtonClick = (letter) => {
     const currentContent = this.state.editorState.getCurrentContent();
     const currentSelection = this.state.editorState.getSelection();
@@ -41,8 +45,7 @@ class TextEditor extends Component {
     );
     const newEditorState = EditorState.push(
       this.state.editorState,
-      newContent,
-      'insert-characters'
+      newContent
     );
     this.setState({
       editorState: newEditorState,
@@ -53,20 +56,28 @@ class TextEditor extends Component {
     return this.state.editorState.getCurrentContent().getPlainText();
   };
 
+  /*
+  Cette méthode est appelée lorsque le bouton Clear All est cliqué dans EditorButtons. 
+  Elle définit le state du component à un nouvel objet EditorState vide en utilisant EditorState.createEmpty().
+  */ 
   handleClear = () => {
     this.setState({ editorState: EditorState.createEmpty() });
   };
+
 
   onChange = (newEditorState) => {
     this.setState({
       editorState: newEditorState
     });
   }
+
   
 
   render() {
     const { editorState } = this.state;
-    //console.log(draftToHtml(convertToRaw(editorState.getCurrentContent())));
+    //const CustomButton = React.createElement('button', { onClick: this.addStar }, '⭐');
+    
+
     return (
       <div>
         
@@ -76,7 +87,7 @@ class TextEditor extends Component {
           wrapperClassName="wrapperClassName"
           editorClassName="editorClassName"
           onEditorStateChange={this.onEditorStateChange}
-          ref={(element) => { this.editor = element; }}
+          toolbarCustomButtons= {[<CustomOption />]}
         />
         <EditorButtons handleClick={this.handleButtonClick} handleClear={this.handleClear} getContent={this.getContent} editorState={this.state.editorState} onChange={this.onChange}/>
         
@@ -310,3 +321,30 @@ class EditorButtons extends Component {
 }
 
 export default TextEditor;
+
+
+class CustomOption extends Component {
+  static propTypes = {
+    onChange: PropTypes.func,
+    editorState: PropTypes.object,
+  };
+
+  addStar=  () => {
+    const { editorState, onChange } = this.props;
+    const contentState = Modifier.replaceText(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      '⭐',
+      editorState.getCurrentInlineStyle(),
+    );
+    onChange(EditorState.push(editorState, contentState, 'insert-characters'));
+  };
+
+  render() {
+    return (
+      <div onClick={this.addStar}>⭐</div>
+
+    );
+  }
+}
+
