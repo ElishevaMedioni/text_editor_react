@@ -1,7 +1,19 @@
 .keyboard-row {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    align-items: flex-end;
+    margin-top: 10px;
+  }
+
+  /* */
+  .keyboard{
+    
+    margin-top: 60px;
+  }
+
+  .editorClassName {
+    resize: both;
+    height: 90px;
   }
   
   button {
@@ -49,8 +61,8 @@
 
   .toolbar {
     display: flex;
-    justify-content: flex-start;
-    
+    justify-content: center;
+    margin-bottom: 10px;
   }  
   
   /* #key-he {

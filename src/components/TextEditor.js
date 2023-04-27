@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw,ContentState, Modifier } from "draft-js";
-//import 'react-simple-keyboard/build/css/index.css';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import './styles.css';
 
@@ -200,18 +199,11 @@ class EditorButtons extends Component {
     const list_english_uppercase_row3 =['A','S','D','F','G','H','J','K','L'];
     const list_english_uppercase_row4 =['Z','X','C','V','B','N','M'];
 
-    const clearButton = (
-      <button onClick={this.props.handleClear}>
-        Clear All
-      </button>
-    );
-
-  
-    // const row1 = list_english_row1.map((letter) => (
-    //   <button key={letter} onClick={() => this.handleClick(letter)}>
-    //     {letter}
+    // const clearButton = (
+    //   <button onClick={this.props.handleClear}>
+    //     Clear All
     //   </button>
-    // ));
+    // );
 
     // check if the keyboard is english or hebrew and if is upper or lower case
     const row1 = this.state.isEngKeyboard ? (
@@ -312,7 +304,7 @@ class EditorButtons extends Component {
     const switchCaseLabel = this.state.isLowerCase ? 'Switch to Uppercase' : 'Switch to Lowercase';
     
     return (
-      <div>
+      <div className="keyboard">
         
         <div className="keyboard-row">{row1}</div>
         <div className="keyboard-row">{row2}</div>
@@ -322,9 +314,7 @@ class EditorButtons extends Component {
         <div className="toolbar">
           <button id="key-he" onClick={this.handleSwitchKeyboard}>{switchButtonLabel}</button>
           <button id="key-cap" onClick={this.handleSwitchCase}>{switchCaseLabel}</button>
-          <div id="key-clear">
-            {clearButton}
-          </div>
+          <button onClick={this.props.handleClear}>Clear All</button>
         </div>
         
 
