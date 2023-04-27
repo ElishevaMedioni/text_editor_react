@@ -4,7 +4,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw,ContentState, Modifier } from "draft-js";
 //import 'react-simple-keyboard/build/css/index.css';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import '/Users/Elish_1/test3/src/App.js';
+import './styles.css';
 
 class TextEditor extends Component {
 
@@ -15,10 +15,6 @@ class TextEditor extends Component {
     };
     this.editor = React.createRef();
   }
-
-  // state = {
-  //   editorState: EditorState.createEmpty(),
-  // };
 
   onEditorStateChange = (editorState) => {
     this.setState({
@@ -54,9 +50,19 @@ class TextEditor extends Component {
     });
   };
 
+  getContent = () => {
+    return this.state.editorState.getCurrentContent().getPlainText();
+  };
+
   handleClear = () => {
     this.setState({ editorState: EditorState.createEmpty() });
   };
+
+  onChange = (newEditorState) => {
+    this.setState({
+      editorState: newEditorState
+    });
+  }
   
 
   render() {
@@ -73,7 +79,7 @@ class TextEditor extends Component {
           onEditorStateChange={this.onEditorStateChange}
           ref={(element) => { this.editor = element; }}
         />
-        <EditorButtons handleClick={this.handleButtonClick} handleClear={this.handleClear}/>
+        <EditorButtons handleClick={this.handleButtonClick} handleClear={this.handleClear} getContent={this.getContent} editorState={this.state.editorState} onChange={this.onChange}/>
         
       </div>
     );
@@ -98,12 +104,46 @@ class EditorButtons extends Component {
   }
 
   handleBackspace = () => {
-    let value = this.props.value;
-    if (typeof value !== 'undefined') {
-      value = value.slice(0, -1);
-      this.props.handleClick(value);
+    const editorState = this.props.editorState;
+    const content = editorState.getCurrentContent();
+    const selection = editorState.getSelection();
+    if (selection.isCollapsed()) {
+      const blockKey = selection.getStartKey();
+      const block = content.getBlockForKey(blockKey);
+      const text = block.getText();
+      const start = selection.getStartOffset();
+      const end = selection.getEndOffset();
+      if (start === 0 && end === 0) {
+        // Do nothing if cursor is at the beginning of the editor
+        return;
+      }
+      const textBefore = text.slice(0, start - 1);
+      const textAfter = text.slice(end);
+      const newContent = content.merge({
+        blockMap: content.getBlockMap().set(
+          blockKey,
+          block.merge({
+            text: textBefore + textAfter
+          })
+        ),
+        selectionAfter: selection.merge({
+          anchorOffset: start - 1,
+          focusOffset: start - 1
+        })
+      });
+      const newEditorState = EditorState.push(editorState, newContent, 'remove-range');
+      this.props.onChange(newEditorState);
+    } else {
+      const newEditorState = EditorState.push(
+        editorState,
+        Modifier.removeRange(content, selection),
+        'remove-range'
+      );
+      this.props.onChange(newEditorState);
     }
   };
+  
+  
   
 
   handleClick = (letter) => {
@@ -279,11 +319,14 @@ class EditorButtons extends Component {
         <div className="keyboard-row">{row3}</div>
         <div className="keyboard-row">{row4}</div>
         <div className="keyboard-row">{row5}</div>
-        <button onClick={this.handleSwitchKeyboard}>{switchButtonLabel}</button>
-        <button onClick={this.handleSwitchCase}>{switchCaseLabel}</button>
-        <div className="editor-buttons">
-          {clearButton}
+        <div className="toolbar">
+          <button id="key-he" onClick={this.handleSwitchKeyboard}>{switchButtonLabel}</button>
+          <button id="key-cap" onClick={this.handleSwitchCase}>{switchCaseLabel}</button>
+          <div id="key-clear">
+            {clearButton}
+          </div>
         </div>
+        
 
       </div>
     );
