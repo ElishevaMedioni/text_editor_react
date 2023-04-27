@@ -82,7 +82,6 @@ class TextEditor extends Component {
         
       </div>
     );
-
   }
 }
 
@@ -106,6 +105,7 @@ class EditorButtons extends Component {
     const editorState = this.props.editorState;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
+    // if there is not selected text, we remove the caracter before the cursor
     if (selection.isCollapsed()) {
       const blockKey = selection.getStartKey();
       const block = content.getBlockForKey(blockKey);
@@ -118,6 +118,7 @@ class EditorButtons extends Component {
       }
       const textBefore = text.slice(0, start - 1);
       const textAfter = text.slice(end);
+      //getting the text before the cursor and the text after the cursor
       const newContent = content.merge({
         blockMap: content.getBlockMap().set(
           blockKey,
@@ -141,9 +142,6 @@ class EditorButtons extends Component {
       this.props.onChange(newEditorState);
     }
   };
-  
-  
-  
 
   handleClick = (letter) => {
     const { value } = this.props;
@@ -159,8 +157,6 @@ class EditorButtons extends Component {
     }
     this.props.handleClick(letter);
   };
-  
-  
 
   handleSwitchKeyboard() {
     if (this.state.isEngKeyboard) {
@@ -182,8 +178,6 @@ class EditorButtons extends Component {
     this.props.handleClear();
   }
 
-
-
   render() {
 
     const list_english_row1 =['1','2','3','4','5','6','7','8','9','0'];
@@ -199,11 +193,6 @@ class EditorButtons extends Component {
     const list_english_uppercase_row3 =['A','S','D','F','G','H','J','K','L'];
     const list_english_uppercase_row4 =['Z','X','C','V','B','N','M'];
 
-    // const clearButton = (
-    //   <button onClick={this.props.handleClear}>
-    //     Clear All
-    //   </button>
-    // );
 
     // check if the keyboard is english or hebrew and if is upper or lower case
     const row1 = this.state.isEngKeyboard ? (
@@ -305,7 +294,6 @@ class EditorButtons extends Component {
     
     return (
       <div className="keyboard">
-        
         <div className="keyboard-row">{row1}</div>
         <div className="keyboard-row">{row2}</div>
         <div className="keyboard-row">{row3}</div>
@@ -316,8 +304,6 @@ class EditorButtons extends Component {
           <button id="key-cap" onClick={this.handleSwitchCase}>{switchCaseLabel}</button>
           <button onClick={this.props.handleClear}>Clear All</button>
         </div>
-        
-
       </div>
     );
   }
